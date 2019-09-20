@@ -1,0 +1,8 @@
+name: "Reproducible Research: Peer Assessment 1"
+navbar:
+  title: "Reproducible Research: Peer Assessment 1"
+  type: inverse
+  left:
+    - text: "Home"
+      icon: fa-home
+      href: PA1_template.html
