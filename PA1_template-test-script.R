@@ -57,7 +57,6 @@ ggplot(data = proj_data_mutated_na_removed)+geom_path(mapping = aes(x=date_time,
 
 proj_data_mean <- proj_data_mutated_na_removed %>% group_by(date) %>%
                                         summarize(mean = mean(steps))
-
 ggplot(data = proj_data_mean)+geom_col(mapping = aes(x=date, y=mean))+
   labs(x="Time", y = "Mean Daily Steps")+
   ggtitle("Mean Daily Steps")
@@ -67,13 +66,12 @@ head(proj_data_mean)
 # I need to ignore 0 values...
 proj_data_median <- proj_data_mutated_na_removed %>% group_by(date) %>%
   summarize(median = median(steps[steps > 0]))
-
-head(proj_data_median)
-
 ggplot(data = proj_data_median)+geom_col(mapping = aes(x=date, y=median))+
   labs(x="Time", y = "Median Daily Steps")+
   ggtitle("Median Daily Steps
           \n (excluding intervals with steps = 0")
+
+head(proj_data_median)
 
 #Time series plot of the average number of steps taken
 

@@ -136,17 +136,6 @@ nrow(proj_data_mutated_na_removed)
 ## [1] 0.1311475
 ```
 
-Steps distribution with NAs.
-
-
-```r
-ggplot(data = proj_data_mutated)+geom_path(mapping = aes(x=date_time, y=steps))+
-  labs(x="Time", y = "Steps")+
-  ggtitle("Steps across time")
-```
-
-![](PA1_template_files/figure-html/data time plot-1.png)<!-- -->
-
 ggplot utomatically removes NAs. Here, I plot the distribution minus NAs, and it's exactly the same as the steps distribution with NAs.
 
 
@@ -161,7 +150,32 @@ ggplot(data = proj_data_mutated_na_removed)+geom_path(mapping = aes(x=date_time,
 
 ## What is mean total number of steps taken per day?
 
+Here is the distribution of the mean number of steps taken per day.
 
+
+```r
+proj_data_mean <- proj_data_mutated_na_removed %>% group_by(date) %>%
+                                        summarize(mean = mean(steps))
+ggplot(data = proj_data_mean)+geom_col(mapping = aes(x=date, y=mean))+
+  labs(x="Time", y = "Mean Daily Steps")+
+  ggtitle("Mean Daily Steps")
+```
+
+![](PA1_template_files/figure-html/data mean-1.png)<!-- -->
+
+Here is the distribution of the median number of steps taken per day for days with non-zero steps. The median for all days, including days with zero steps is zero for all days.
+
+
+```r
+proj_data_median <- proj_data_mutated_na_removed %>% group_by(date) %>%
+  summarize(median = median(steps[steps > 0]))
+ggplot(data = proj_data_median)+geom_col(mapping = aes(x=date, y=median))+
+  labs(x="Time", y = "Median Daily Steps")+
+  ggtitle("Median Daily Steps
+          \n (excluding intervals with steps = 0")
+```
+
+![](PA1_template_files/figure-html/data median-1.png)<!-- -->
 
 
 
