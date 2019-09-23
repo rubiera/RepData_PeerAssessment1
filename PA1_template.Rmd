@@ -156,3 +156,108 @@ ggplot(data = proj_data_factors)+
   geom_line(mapping = aes(x = interval, y = steps))+
   facet_wrap(~ Day.Type, nrow = 1)
 ```
+
+In order to impute NAs, I follow this procedure:
+
+1. I separate proj_data_factors, which is the data I have been plotting, which includes NAs into two datasets: one with NAs, one without. 
+
+```{r step 1 split, warning=FALSE}
+proj_data_factors_NA <- filter(proj_data_factors, 
+                        is.na(proj_data_factors$steps) == TRUE)
+nrow(proj_data_factors_NA)
+proj_data_factors_notNA <- filter(proj_data_factors, 
+                               is.na(proj_data_factors$steps) == FALSE)
+nrow(proj_data_factors_notNA)
+head(proj_data_factors_notNA)
+```
+
+
+2. I then split the data that has no NA values into weekday data and weekend data.
+
+```{r step 2 split, warning=FALSE}
+proj_data_factors_notNA_wday <- filter(proj_data_factors_notNA, Day.Type == "Weekday")
+proj_data_factors_notNA_wend <- filter(proj_data_factors_notNA, Day.Type == "Weekend")                            
+```
+
+3. I calculate the mean steps for each time interval for the "no NA values" data separately for  weekday data and weekend data.
+
+Here is the imputation distribution for weekdays.
+
+```{r step-3-imp-dist-weekdays, warning=FALSE}
+proj_data_notNA_wday_intervals <- proj_data_factors_notNA_wday %>% group_by(interval) %>%
+                summarize(Mean.Interval = mean(steps))
+ggplot(data=proj_data_notNA_wday_intervals)+geom_col(mapping = aes(x=interval, y=Mean.Interval))
+```
+
+Here is the imputation distribution for weekends.
+
+```{r step-3-imp-dist-weekends, warning=FALSE}
+proj_data_notNA_wend_intervals <- proj_data_factors_notNA_wend %>% group_by(interval) %>%
+  summarize(Mean.Interval = mean(steps))
+ggplot(data=proj_data_notNA_wend_intervals)+geom_col(mapping = aes(x=interval, y=Mean.Interval))
+```
+
+4. I use these distributions as the data I will impute. I assign the mean steps by interval from the "no NA values" weekday data to the weekday data with NA values for steps. I do the same for the weekend data by imputing weeking missing values with weekend modeled values from the mean steps in the "no NA values" weekend data.
+
+```{r step-4-imputation, warning=FALSE}
+proj_data_factors_NA_wday <- filter(proj_data_factors_NA, Day.Type == "Weekday")
+proj_data_factors_NA_wend <- filter(proj_data_factors_NA, Day.Type == "Weekend")
+
+for (i in 1:seq_along(proj_data_notNA_wday_intervals$interval)) {
+    proj_data_factors_NA_wday$steps <- proj_data_notNA_wday_intervals$Mean.Interval
+}
+
+for (i in 1:seq_along(proj_data_notNA_wend_intervals$interval)) {
+  proj_data_factors_NA_wend$steps <- proj_data_notNA_wend_intervals$Mean.Interval
+}
+
+proj_data_final_imputed <- rbind(proj_data_factors_notNA,proj_data_factors_NA_wday,
+                                 proj_data_factors_NA_wend)
+```
+
+5. I perform checks on the data to make sure the imputation makes sense. 
+
+```{r step-5-imputation check part 1, warning=FALSE}
+proj_data_factors_NA_wday
+proj_data_factors_NA_wend
+```
+
+```{r imputation-check-weekdays, warning=FALSE}
+ggplot(data=proj_data_factors_NA_wday)+geom_col(mapping = aes(x=interval, y=steps))
+```
+
+```{r imputation-check-weekend, warning=FALSE}
+ggplot(data=proj_data_factors_NA_wend)+geom_col(mapping = aes(x=interval, y=steps))
+```
+
+I check that the total rows in the final, imputed data, is the same as the starting data.
+
+```{r step-5-imputation check part 2, warning=FALSE}
+nrow(proj_data)
+nrow(proj_data_final_imputed)
+```
+
+I check the intervals by day of the week for the imputed data.
+
+```{r final-imputation-check-weekdays, warning=FALSE}
+ggplot(data = proj_data_final_imputed)+
+  geom_line(mapping = aes(x = interval, y = steps))+
+  facet_wrap(~ Day.of.Week, nrow = 2)
+```
+
+I check the intervals by if the day is a weekday or a weekend for the imputed data.
+
+```{r final-imputation-check-weekends, warning=FALSE}
+ggplot(data = proj_data_final_imputed)+
+  geom_line(mapping = aes(x = interval, y = steps))+
+  facet_wrap(~ Day.Type, nrow = 1)
+```
+
+Finally, I draw the day by day plot and see that NA weekdays have been imputed and that NA weekends have been imputed. The means for the imputations are lower than the typical day because there are days with complete data (no NAs) with very small step counts, such as Oct 2, and Nov 15. In a more sophisticated imputation, I would have excluded those two days from my reference distribution to use as the data to assign to the NA days.
+
+```{r final-daily-imputation-check, warning=FALSE}
+baseplot <- ggplot(data = proj_data_final_imputed)
+baseplot +  geom_line(mapping = aes(x = interval, y = steps))+
+  facet_wrap(~ date, nrow = 6)
+```
+
