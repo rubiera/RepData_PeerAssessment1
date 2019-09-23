@@ -1,0 +1,44 @@
+https://github.com/rubiera/RepData_PeerAssessment1
+
+git branch -f https://github.com/rubiera/RepData_PeerAssessment1 HEAD
+
+C:\Users\rubiera-laptop\Documents\Tony Work\EID Data Science\course 5 reproducible research\RepData_PeerAssessment1-master>git branch -f https://github.com/rubiera/RepData_PeerAssessment1 HEAD
+fatal: 'https://github.com/rubiera/RepData_PeerAssessment1' is not a valid branch name.
+
+C:\Users\rubiera-laptop\Documents\Tony Work\EID Data Science\course 5 reproducible research\RepData_PeerAssessment1-master>git branch -f RepData_PeerAssessment1 HEAD
+fatal: Cannot force update the current branch.
+
+git checkout branch-name
+
+git checkout https://github.com/rubiera/RepData_PeerAssessment1
+
+C:\Users\rubiera-laptop\Documents\Tony Work\EID Data Science\course 5 reproducible research\RepData_PeerAssessment1-master>git checkout https://github.com/rubiera/RepData_PeerAssessment1
+error: pathspec 'https://github.com/rubiera/RepData_PeerAssessment1' did not match any file(s) known to git
+
+
+----
+
+
+clean restart with a new project
+C:\Users\rubiera-laptop\Documents\Tony Work\EID Data Science\course 5 reproducible research\RepData_PeerAssessment\RepData_PeerAssessment>git pull https://github.com/rubiera/RepData_PeerAssessment1
+remote: Enumerating objects: 46, done.
+remote: Total 46 (delta 0), reused 0 (delta 0), pack-reused 46
+Unpacking objects: 100% (46/46), done.
+From https://github.com/rubiera/RepData_PeerAssessment1
+ * branch            HEAD       -> FETCH_HEAD
+
+
+C:\Users\rubiera-laptop\Documents\Tony Work\EID Data Science\course 5 reproducible research\RepData_PeerAssessment\RepData_PeerAssessment>git push https://github.com/rubiera/RepData_PeerAssessment1
+fatal: The current branch master has no upstream branch.
+To push the current branch and set the remote as upstream, use
+
+    git push --set-upstream https://github.com/rubiera/RepData_PeerAssessment1 master
+
+C:\Users\rubiera-laptop\Documents\Tony Work\EID Data Science\course 5 reproducible research\RepData_PeerAssessment\RepData_PeerAssessment>git push --set-upstream https://github.com/rubiera/RepData_PeerAssessment1 master
+Everything up-to-date
+Branch 'master' set up to track remote branch 'master' from 'https://github.com/rubiera/RepData_PeerAssessment1'.
+
+
+
+
+
