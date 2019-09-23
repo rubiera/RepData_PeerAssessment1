@@ -92,6 +92,8 @@ the dataset.
 
 ![total number of steps taken as a time series](data-time-plot-no-na-1.png)
 
+![total number of steps taken per day](data-total-daily-steps-1.png)
+
 2. Calculate and report the **mean** and **median** total number of steps taken per day
 
 Mean:
