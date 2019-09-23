@@ -90,12 +90,25 @@ the dataset.
 
 1. Make a histogram of the total number of steps taken each day
 
+![total number of steps taken as a time series](data-time-plot-no-na-1.png)
+
+![total number of steps taken per day](data-total-daily-steps-1.png)
+
 2. Calculate and report the **mean** and **median** total number of steps taken per day
 
+Mean:
+
+![mean number of steps taken per day](data-mean-1.png)
+
+Median:
+
+![mean number of steps taken per day for intervals with nonzero steps](data-median-1.png)
 
 ### What is the average daily activity pattern?
 
 1. Make a time series plot (i.e. `type = "l"`) of the 5-minute interval (x-axis) and the average number of steps taken, averaged across all days (y-axis)
+
+![interval time series](data-daily-average-by-time-interval-1.png)
 
 2. Which 5-minute interval, on average across all the days in the dataset, contains the maximum number of steps?
 
