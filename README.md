@@ -112,7 +112,7 @@ Median:
 
 2. Which 5-minute interval, on average across all the days in the dataset, contains the maximum number of steps?
 
-
+-----The 5-minute interval that, on average, contains the maximum number of steps is found at 8 minutes and 35 seconds from the beginning of the day. The mean steps for this maximum interval is 206.
 
 -----I will answer the last two questions together. Actually, I want to answer them in the opposite order: I want to know the variations by day of the week and by separating the weekdays from the weekends, and then I want to carry out my imputation.
 
@@ -141,9 +141,7 @@ the dataset with the filled-in missing values for this part.
 
 1. Create a new factor variable in the dataset with two levels -- "weekday" and "weekend" indicating whether a given date is a weekday or weekend day.
 
-1. Make a panel plot containing a time series plot (i.e. `type = "l"`) of the 5-minute interval (x-axis) and the average number of steps taken, averaged across all weekday days or weekend days (y-axis). The plot should look something like the following, which was created using **simulated data**:
-
-![Sample panel plot](instructions_fig/sample_panelplot.png) 
+1. Make a panel plot containing a time series plot (i.e. `type = "l"`) of the 5-minute interval (x-axis) and the average number of steps taken, averaged across all weekday days or weekend days (y-axis). 
 
 
 **Your plot will look different from the one above** because you will
