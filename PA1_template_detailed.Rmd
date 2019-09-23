@@ -1,0 +1,80 @@
+---
+title: "Reproducible Research: Peer Assessment 1"
+output: 
+  html_document:
+    keep_md: true
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r library load, warning=FALSE, message=FALSE}
+library(tidyverse)
+```
+
+## Loading and preprocessing the data
+I load the data into a variable named proj_data, and check the percent of NAs in the steps variable.
+
+```{r data load, warning=FALSE, cache=TRUE}
+proj_data <- read_csv("./data/activity.csv")
+head(proj_data)
+class(proj_data)
+mean(is.na(proj_data$steps))
+```
+
+The data is in tibble format, which is the format I need to use the various functions available from tidyverse.
+
+```{r data time range, warning=FALSE}
+interval_whole <-strptime(str_pad(proj_data$interval,4,pad="0"), format='%M %S')
+proj_data_mutated <- mutate(proj_data,date_time = 
+                              as.POSIXct(paste(proj_data$date, substr(interval_whole,15,20))))
+head(proj_data_mutated)
+nrow(proj_data_mutated)
+proj_data_mutated_na_removed <- na.omit(proj_data_mutated)
+head(proj_data_mutated_na_removed)
+
+
+```
+
+The percent of NA rows matches the difference in the original data and the data with NA values removed.
+
+```{r data na check, warning=FALSE}
+nrow(proj_data_mutated)
+nrow(proj_data_mutated_na_removed)
+(1-(15264/17568))
+```
+
+Steps distribution with NAs.
+
+```{r data time plot, warning=FALSE}
+ggplot(data = proj_data_mutated)+geom_path(mapping = aes(x=date_time, y=steps))+
+  labs(x="Time", y = "Steps")+
+  ggtitle("Steps across time")
+```
+
+ggplot utomatically removes NAs. Here, I plot the distribution minus NAs, and it's exactly the same as the steps distribution with NAs.
+
+
+```{r data time plot no na, warning=FALSE}
+ggplot(data = proj_data_mutated_na_removed)+geom_path(mapping = aes(x=date_time, y=steps))+
+  labs(x="Time", y = "Steps")+
+  ggtitle("Steps across time")
+```
+
+## What is mean total number of steps taken per day?
+
+
+
+
+
+## What is the average daily activity pattern?
+
+
+
+## Imputing missing values
+
+
+
+## Are there differences in activity patterns between weekdays and weekends?
