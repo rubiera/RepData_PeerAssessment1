@@ -96,11 +96,11 @@ the dataset.
 
 Mean:
 
-![mean number of steps taken per day](data median-1.png)
+![mean number of steps taken per day](data-median-1.png)
 
 Median:
 
-![mean number of steps taken per day for intervals with nonzero steps](data time plot no na-1.png)
+![mean number of steps taken per day for intervals with nonzero steps](data median-1.png)
 
 ### What is the average daily activity pattern?
 
