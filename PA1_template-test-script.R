@@ -124,13 +124,147 @@ ggplot(data = proj_data_interval)+geom_line(mapping = aes(x=interval, y=mean))+
           \n in Seconds for Entire Day")
 
 #The 5-minute interval that, on average, contains the maximum number of steps
-
-
+filter(proj_data_interval, proj_data_interval$mean == max(proj_data_interval$mean))
+filter(proj_data_mutated, interval == 835)
 
 #Code to describe and show a strategy for imputing missing data
+
+mean(is.na(proj_data$steps))
+
+#let's do weekdays
+proj_data_daysofweek <- mutate(proj_data_mutated,
+  Day.of.Week = weekdays(as.POSIXct(date)))
+
+weekdays(as.POSIXct(proj_data_mutated$date)) 
+
+Weekday <- c("Monday","Tuesday","Wednesday","Thursday","Friday")
+Weekend <- c("Saturday","Sunday")
+weekdays_weekend <- list(Weekday, Weekend)
+factor(weekdays_weekend, levels = list(Weekday, Weekend))
+
+proj_data_weekdays_only <- filter(proj_data_daysofweek,Day.of.Week %in% weekdays_weekend[[1]])
+table(proj_data_weekdays_only$Day.of.Week)
+
+proj_data_weekdays_only <- mutate(proj_data_weekdays_only, Day.Type = c("Weekday"))
+
+proj_data_weekend_only <- filter(proj_data_daysofweek,Day.of.Week %in% weekdays_weekend[[2]])
+table(proj_data_weekend_only$Day.of.Week)
+
+proj_data_weekend_only <- mutate(proj_data_weekend_only, Day.Type = c("Weekend"))
+
+proj_data_factors <- rbind(proj_data_weekdays_only, proj_data_weekend_only)
+
+write.csv(proj_data_factors, "./data/proj_data_factors.csv")
+#Friday    Monday  Thursday   Tuesday Wednesday 
+#2304      2592      2592      2592      2592 
+#Saturday   Sunday 
+#2304     2592
+
+
 #Histogram of the total number of steps taken each day after missing values are imputed
 #Panel plot comparing the average number of steps taken per 5-minute interval across weekdays and weekends
 #All of the R code needed to reproduce the results (numbers, plots, etc.) in the report
 
+
+#Intervals by day of the week.
+
+ggplot(data = proj_data_factors)+
+  geom_line(mapping = aes(x = interval, y = steps))+
+  facet_wrap(~ Day.of.Week, nrow = 2)
+
+#Intervals by if the day is a weekday or a weekend.
+
+ggplot(data = proj_data_factors)+
+  geom_line(mapping = aes(x = interval, y = steps))+
+  facet_wrap(~ Day.Type, nrow = 1)
+
+#########################################################################
+#find days that are all or some NA
+
+proj_data_factors_datelist <- unique(proj_data_factors$date)
+length(proj_data_factors_datelist)
+sum(is.na(proj_data_factors$steps))
+
+proj_data_factors_NA <- filter(proj_data_factors, 
+                        is.na(proj_data_factors$steps) == TRUE)
+nrow(proj_data_factors_NA)
+
+proj_data_factors_notNA <- filter(proj_data_factors, 
+                               is.na(proj_data_factors$steps) == FALSE)
+nrow(proj_data_factors_notNA)
+
+head(proj_data_factors_notNA)
+
+proj_data_factors_notNA_wday <- filter(proj_data_factors_notNA, Day.Type == "Weekday")
+proj_data_factors_notNA_wend <- filter(proj_data_factors_notNA, Day.Type == "Weekend")                            
+
+#come up with means for a typical weekday and a typical weekend
+
+proj_data_notNA_wday_intervals <- proj_data_factors_notNA_wday %>% group_by(interval) %>%
+                summarize(Mean.Interval = mean(steps))
+ggplot(data=proj_data_notNA_wday_intervals)+geom_col(mapping = aes(x=interval, y=Mean.Interval))
+
+proj_data_notNA_wend_intervals <- proj_data_factors_notNA_wend %>% group_by(interval) %>%
+  summarize(Mean.Interval = mean(steps))
+ggplot(data=proj_data_notNA_wend_intervals)+geom_col(mapping = aes(x=interval, y=Mean.Interval))
+
+filter(proj_data_notNA_wday_intervals, interval %>% between(800,845))
+filter(proj_data_notNA_wend_intervals, interval %>% between(800,845))
+
+#impute NAs
+head(proj_data_factors_NA)
+
+proj_data_factors_NA_wday <- filter(proj_data_factors_NA, Day.Type == "Weekday")
+proj_data_factors_NA_wend <- filter(proj_data_factors_NA, Day.Type == "Weekend")
+
+#works with a warning... overkill probably
+for (i in 1:seq_along(proj_data_notNA_wday_intervals$interval)) {
+  print(proj_data_notNA_wday_intervals$interval)
+  if(proj_data_factors_NA_test$interval == proj_data_notNA_wday_intervals$interval){
+  proj_data_factors_NA_test$steps <- proj_data_notNA_wday_intervals$Mean.Interval 
+  }
+}
+
+##use for weekdays and weekends
+
+#works better (no warning)
+for (i in 1:seq_along(proj_data_notNA_wday_intervals$interval)) {
+    print(proj_data_notNA_wday_intervals$interval)
+    proj_data_factors_NA_wday$steps <- proj_data_notNA_wday_intervals$Mean.Interval
+}
+
+for (i in 1:seq_along(proj_data_notNA_wend_intervals$interval)) {
+  print(proj_data_notNA_wend_intervals$interval)
+  proj_data_factors_NA_wend$steps <- proj_data_notNA_wend_intervals$Mean.Interval
+}
+
+proj_data_factors_NA_wday
+proj_data_factors_NA_wend
+
+ggplot(data=proj_data_factors_NA_wday)+geom_col(mapping = aes(x=interval, y=steps))
+ggplot(data=proj_data_factors_NA_wend)+geom_col(mapping = aes(x=interval, y=steps))
+
+proj_data_final_imputed <- rbind(proj_data_factors_notNA,proj_data_factors_NA_wday,
+                                 proj_data_factors_NA_wend)
+
+nrow(proj_data)
+nrow(proj_data_final_imputed)
+
+#Intervals by day of the week.
+
+ggplot(data = proj_data_final_imputed)+
+  geom_line(mapping = aes(x = interval, y = steps))+
+  facet_wrap(~ Day.of.Week, nrow = 2)
+
+#Intervals by if the day is a weekday or a weekend.
+
+ggplot(data = proj_data_final_imputed)+
+  geom_line(mapping = aes(x = interval, y = steps))+
+  facet_wrap(~ Day.Type, nrow = 1)
+
+#all days
+baseplot <- ggplot(data = proj_data_final_imputed)
+baseplot +  geom_line(mapping = aes(x = interval, y = steps))+
+  facet_wrap(~ date, nrow = 6)
 
 

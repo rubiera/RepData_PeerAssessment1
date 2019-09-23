@@ -67,7 +67,7 @@ ggplot(data = proj_data_day_sum, aes(x = date, y = Sum.Steps))+
 
 The mean, excluding NAs, of the total steps per day is 10766.19.
 
-```{r data-total-daily-steps, warning=FALSE}
+```{r data-mean-daily-steps, warning=FALSE}
 mean(na.omit(proj_data_day_sum$Sum.Steps))
 ```
 
@@ -115,11 +115,44 @@ ggplot(data = proj_data_interval)+geom_line(mapping = aes(x=interval, y=mean))+
           \n in Seconds for Entire Day")
 ```
 
+The 5-minute interval that, on average, contains the maximum number of steps is found at 8 minutes and 35 seconds from the beginning of the day. The mean steps for this maximum interval is 206.
 
-
+```{r max time interval, warning=FALSE}
+filter(proj_data_interval, mean == max(mean))
+```
 
 ## Imputing missing values
-
-
-
 ## Are there differences in activity patterns between weekdays and weekends?
+
+I will answer the last two questions together. Actually, I want to answer them in the opposite order: I want to know the variations by day of the week and by separating the weekdays from the weekends, and then I want to carry out my imputation.
+
+```{r factors, warning=FALSE}
+proj_data_daysofweek <- mutate(proj_data_mutated,
+  Day.of.Week = weekdays(as.POSIXct(date)))
+Weekday <- c("Monday","Tuesday","Wednesday","Thursday","Friday")
+Weekend <- c("Saturday","Sunday")
+weekdays_weekend <- list(Weekday, Weekend)
+factor(weekdays_weekend, levels = list(Weekday, Weekend))
+proj_data_weekdays_only <- filter(proj_data_daysofweek,Day.of.Week %in% weekdays_weekend[[1]])
+proj_data_weekdays_only <- mutate(proj_data_weekdays_only, Day.Type = c("Weekday"))
+proj_data_weekend_only <- filter(proj_data_daysofweek,Day.of.Week %in% weekdays_weekend[[2]])
+proj_data_weekend_only <- mutate(proj_data_weekend_only, Day.Type = c("Weekend"))
+proj_data_factors <- rbind(proj_data_weekdays_only, proj_data_weekend_only)
+head(proj_data_factors)
+```
+
+Intervals by day of the week.
+
+```{r data-weekday-daily-average, warning=FALSE}
+ggplot(data = proj_data_factors)+
+  geom_line(mapping = aes(x = interval, y = steps))+
+  facet_wrap(~ Day.of.Week, nrow = 2)
+```
+
+Intervals by if the day is a weekday or a weekend.
+
+```{r data-weekend-daily-average, warning=FALSE}
+ggplot(data = proj_data_factors)+
+  geom_line(mapping = aes(x = interval, y = steps))+
+  facet_wrap(~ Day.Type, nrow = 1)
+```

@@ -147,7 +147,7 @@ ggplot(data = proj_data_mutated_na_removed)+geom_path(mapping = aes(x=date_time,
 
 ![](PA1_template_files/figure-html/data time plot no na-1.png)<!-- -->
 
-ggplot automatically removes NAs. Here, I plot the distribution minus NAs, and it's exactly the same as the steps distribution with NAs.
+ggplot automatically removes NAs. Here, I plot the distribution minus NAs, and it's exactly the same as the steps distribution with NAs. 
 
 
 ```r
@@ -160,6 +160,17 @@ ggplot(data = proj_data_day_sum, aes(x = date, y = Sum.Steps))+
 ```
 
 ![](PA1_template_files/figure-html/data-total-daily-steps-1.png)<!-- -->
+
+The mean, excluding NAs, of the total steps per day is 10766.19.
+
+
+```r
+mean(na.omit(proj_data_day_sum$Sum.Steps))
+```
+
+```
+## [1] 10766.19
+```
 
 ## What is mean total number of steps taken per day?
 
@@ -217,11 +228,80 @@ ggplot(data = proj_data_interval)+geom_line(mapping = aes(x=interval, y=mean))+
 
 ![](PA1_template_files/figure-html/data daily average by time interval-1.png)<!-- -->
 
+The 5-minute interval that, on average, contains the maximum number of steps is found at 8 minutes and 35 seconds from the beginning of the day. The mean steps for this maximum interval is 206.
 
 
+```r
+filter(proj_data_interval, mean == max(mean))
+```
+
+```
+## # A tibble: 1 x 2
+##   interval  mean
+##      <dbl> <dbl>
+## 1      835  206.
+```
 
 ## Imputing missing values
-
-
-
 ## Are there differences in activity patterns between weekdays and weekends?
+
+I will answer the last two questions together. Actually, I want to answer them in the opposite order: I want to know the variations by day of the week and by separating the weekdays from the weekends, and then I want to carry out my imputation.
+
+
+```r
+proj_data_daysofweek <- mutate(proj_data_mutated,
+  Day.of.Week = weekdays(as.POSIXct(date)))
+Weekday <- c("Monday","Tuesday","Wednesday","Thursday","Friday")
+Weekend <- c("Saturday","Sunday")
+weekdays_weekend <- list(Weekday, Weekend)
+factor(weekdays_weekend, levels = list(Weekday, Weekend))
+```
+
+```
+## [1] c("Monday", "Tuesday", "Wednesday", "Thursday", "Friday")
+## [2] c("Saturday", "Sunday")                                  
+## 2 Levels: c("Monday", "Tuesday", "Wednesday", "Thursday", "Friday") ...
+```
+
+```r
+proj_data_weekdays_only <- filter(proj_data_daysofweek,Day.of.Week %in% weekdays_weekend[[1]])
+proj_data_weekdays_only <- mutate(proj_data_weekdays_only, Day.Type = c("Weekday"))
+proj_data_weekend_only <- filter(proj_data_daysofweek,Day.of.Week %in% weekdays_weekend[[2]])
+proj_data_weekend_only <- mutate(proj_data_weekend_only, Day.Type = c("Weekend"))
+proj_data_factors <- rbind(proj_data_weekdays_only, proj_data_weekend_only)
+head(proj_data_factors)
+```
+
+```
+## # A tibble: 6 x 6
+##   steps date       interval date_time           Day.of.Week Day.Type
+##   <dbl> <date>        <dbl> <dttm>              <chr>       <chr>   
+## 1     0 2012-10-02        0 2012-10-02 00:00:00 Monday      Weekday 
+## 2     0 2012-10-02        5 2012-10-02 00:05:00 Monday      Weekday 
+## 3     0 2012-10-02       10 2012-10-02 00:10:00 Monday      Weekday 
+## 4     0 2012-10-02       15 2012-10-02 00:15:00 Monday      Weekday 
+## 5     0 2012-10-02       20 2012-10-02 00:20:00 Monday      Weekday 
+## 6     0 2012-10-02       25 2012-10-02 00:25:00 Monday      Weekday
+```
+
+Intervals by day of the week.
+
+
+```r
+ggplot(data = proj_data_factors)+
+  geom_line(mapping = aes(x = interval, y = steps))+
+  facet_wrap(~ Day.of.Week, nrow = 2)
+```
+
+![](PA1_template_files/figure-html/data-weekday-daily-average-1.png)<!-- -->
+
+Intervals by if the day is a weekday or a weekend.
+
+
+```r
+ggplot(data = proj_data_factors)+
+  geom_line(mapping = aes(x = interval, y = steps))+
+  facet_wrap(~ Day.Type, nrow = 1)
+```
+
+![](PA1_template_files/figure-html/data-weekend-daily-average-1.png)<!-- -->
