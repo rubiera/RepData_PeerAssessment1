@@ -1,6 +1,6 @@
 ## Note to grader
 
-I was unable to load the html using RStudio, and that's where the analysis is developed. I have attempted to reproduct the html from the R Markdown by editing this file.
+I have attempted to reproduce the html from the R Markdown by editing this file. Github does not display the html R Markdown output.
 
 ## Introduction
 
@@ -40,9 +40,6 @@ The variables included in this dataset are:
 * **interval**: Identifier for the 5-minute interval in which
     measurement was taken
 
-
-
-
 The dataset is stored in a comma-separated-value (CSV) file and there
 are a total of 17,568 observations in this
 dataset.
@@ -76,16 +73,17 @@ repository state.
 NOTE: The GitHub repository also contains the dataset for the
 assignment so you do not have to download the data separately.
 
-
-
 ### Loading and preprocessing the data
 
 Show any code that is needed to
 
 1. Load the data (i.e. `read.csv()`)
 
-2. Process/transform the data (if necessary) into a format suitable for your analysis
+I load the data into a variable named proj_data, and check the percent of NAs in the steps variable.
 
+proj_data <- read_csv("./data/activity.csv")
+
+2. Process/transform the data (if necessary) into a format suitable for your analysis
 
 ### What is mean total number of steps taken per day?
 
@@ -120,9 +118,15 @@ Median:
 
 -----I will answer the last two questions together. Actually, I want to answer them in the opposite order: I want to know the variations by day of the week and by separating the weekdays from the weekends, and then I want to carry out my imputation.
 
+Intervals by day of the week.
+
 ![interval time series for weekdays](data-weekday-daily-average-1.png)
 
+Intervals by if the day is a weekday or a weekend.
+
 ![interval time series for weekends](data-weekend-daily-average-1.png)
+
+There is variation for every day of the week, and when we compare weekdays to weekends, there is a lot of activity on weekday mornings that is not found during the weekends.
 
 ### Imputing missing values
 
@@ -147,12 +151,43 @@ the dataset with the filled-in missing values for this part.
 
 1. Make a panel plot containing a time series plot (i.e. `type = "l"`) of the 5-minute interval (x-axis) and the average number of steps taken, averaged across all weekday days or weekend days (y-axis). 
 
+## My imputation steps.
 
-**Your plot will look different from the one above** because you will
-be using the activity monitor data. Note that the above plot was made
-using the lattice system but you can make the same version of the plot
-using any plotting system you choose.
+In order to impute NAs, I follow this procedure:
 
+1. I separate proj_data_factors, which is the data I have been plotting, which includes NAs into two datasets: one with NAs, one without. 
+
+2. I then split the data that has no NA values into weekday data and weekend data.
+
+3. I calculate the mean steps for each time interval for the "no NA values" data separately for  weekday data and weekend data.
+
+Here is the imputation distribution for weekdays. Weekdays have lots of steps in the early morning that weekends do not have.
+
+![imputation time series for weekdays](step-3-imp-dist-weekdays.png)
+
+Here is the imputation distribution for weekends.
+
+![imputation time series for weekends](step-3-imp-dist-weekends.png)
+
+4. I use these distributions as the data I will impute. I assign the mean steps by interval from the "no NA values" weekday data to the weekday data with NA values for steps. I do the same for the weekend data by imputing weeking missing values with weekend modeled values from the mean steps in the "no NA values" weekend data.
+
+5. I perform checks on the source data for the imputation to make sure the imputation makes sense. 
+
+![imputation check for weekdays](imputation-check-weekdays.png)
+
+![imputation check for weekends](imputation-check-weekend.png)
+
+I check in the final dataset the intervals by day of the week for the imputed data.
+
+![imputation check for weekdays](final-imputation-check-weekdays.png)
+
+I check in the final dataset the intervals by if the day is a weekday or a weekend for the imputed data.
+
+![imputation check for weekends](final-imputation-check-weekends.png)
+
+Finally, I draw the day by day plot and see that NA weekdays have been imputed and that NA weekends have been imputed. The means for the imputations are lower than the typical day because there are days with complete data (no NAs) with very small step counts, such as Oct 2, and Nov 15. In a more sophisticated imputation, I would have excluded those two days from my reference distribution to use as the data to assign to the NA days.
+
+![imputation final check](final-daily-imputation-check.png)
 
 ## Submitting the Assignment
 
