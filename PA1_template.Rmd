@@ -157,6 +157,8 @@ ggplot(data = proj_data_factors)+
   facet_wrap(~ Day.Type, nrow = 1)
 ```
 
+There is variation for every day of the week, and when we compare weekdays to weekends, there is a lot of activity on weekday mornings that is not found during the weekends.
+
 In order to impute NAs, I follow this procedure:
 
 1. I separate proj_data_factors, which is the data I have been plotting, which includes NAs into two datasets: one with NAs, one without. 
@@ -181,7 +183,7 @@ proj_data_factors_notNA_wend <- filter(proj_data_factors_notNA, Day.Type == "Wee
 
 3. I calculate the mean steps for each time interval for the "no NA values" data separately for  weekday data and weekend data.
 
-Here is the imputation distribution for weekdays.
+Here is the imputation distribution for weekdays. Weekdays have lots of steps in the early morning that weekends do not have.
 
 ```{r step-3-imp-dist-weekdays, warning=FALSE}
 proj_data_notNA_wday_intervals <- proj_data_factors_notNA_wday %>% group_by(interval) %>%
