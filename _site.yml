@@ -9,6 +9,4 @@ navbar:
     - text: "Assignment"
       icon: fa-gear
       href: PA1_template.html
-    - text: "Additional Results for Assignment"
-      icon: fa-gear
-      href: PA1_template_detailed.html
+

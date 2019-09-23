@@ -46,7 +46,7 @@ nrow(proj_data_mutated_na_removed)
 (1-(15264/17568))
 ```
 
-ggplot utomatically removes NAs. Here, I plot the distribution minus NAs, and it's exactly the same as the steps distribution with NAs.
+ggplot automatically removes NAs. Here, I plot the distribution minus NAs, and it's exactly the same as the steps distribution with NAs.
 
 
 ```{r data time plot no na, warning=FALSE}
