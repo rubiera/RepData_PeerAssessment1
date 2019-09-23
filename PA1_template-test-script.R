@@ -8,6 +8,16 @@ proj_data <- read_csv("./data/activity.csv")
 head(proj_data)
 class(proj_data)
 
+#I was missing this plot
+proj_data_day_sum <- proj_data %>% group_by(date) %>%
+      summarize(Sum.Steps = sum(steps))
+ggplot(data = proj_data_day_sum, aes(x = date, y = Sum.Steps))+ 
+  geom_bar(stat = "identity")+
+  labs(x="Date", y = "Sum of Daily Steps")+
+  ggtitle("Total Daily Steps")
+
+mean(na.omit(proj_data_day_sum$Sum.Steps))
+
 mean(is.na(proj_data$steps))
 #[1] 0.1311475
 
@@ -75,11 +85,48 @@ head(proj_data_median)
 
 #Time series plot of the average number of steps taken
 
+#this is not what is being asked
 
+steps_avg_series <- proj_data_mean$mean
+steps_avg_date <- proj_data_mean$date
+proj_data_plot_avg <- ggplot(NULL, aes(y = steps_avg_series,  x = steps_avg_date))
+proj_data_plot_avg + geom_line() + geom_point()+
+  labs(x="Time", y = "Average Daily Steps")+
+  ggtitle("Average daily activity pattern")
 
+#I need to use proj_data_mutated
 
+str(proj_data_mutated)
+head(proj_data_mutated$steps, 300)
+head(proj_data_mutated$date_time, 30)
+mean(is.na(proj_data_mutated$steps))
+
+plot(proj_data_mutated$date_time, proj_data_mutated$steps, type="l")
+
+write.csv(proj_data_mutated, "./data/proj_data_mutated.csv")
+head(proj_data_mutated)
+
+plot(proj_data_mutated$interval, proj_data_mutated$steps, type="l")
+
+table(proj_data_mutated$date)
+
+head(proj_data_mutated)
+
+ggplot(data = proj_data_mutated)+
+  geom_line(mapping = aes(x = interval, y = steps))+
+  facet_wrap(~ date, nrow = 6)
+
+proj_data_interval <- proj_data_mutated_na_removed %>% group_by(interval) %>%
+  summarize(mean = mean(steps))
+ggplot(data = proj_data_interval)+geom_line(mapping = aes(x=interval, y=mean))+
+  labs(x="Time Interval", y = "Mean Daily Steps")+
+  ggtitle("Mean Daily Steps by Time Interval
+          \n in Seconds for Entire Day")
 
 #The 5-minute interval that, on average, contains the maximum number of steps
+
+
+
 #Code to describe and show a strategy for imputing missing data
 #Histogram of the total number of steps taken each day after missing values are imputed
 #Panel plot comparing the average number of steps taken per 5-minute interval across weekdays and weekends

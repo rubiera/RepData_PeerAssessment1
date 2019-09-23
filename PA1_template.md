@@ -139,7 +139,6 @@ nrow(proj_data_mutated_na_removed)
 ggplot automatically removes NAs. Here, I plot the distribution minus NAs, and it's exactly the same as the steps distribution with NAs.
 
 
-
 ```r
 ggplot(data = proj_data_mutated_na_removed)+geom_path(mapping = aes(x=date_time, y=steps))+
   labs(x="Time", y = "Steps")+
@@ -147,6 +146,20 @@ ggplot(data = proj_data_mutated_na_removed)+geom_path(mapping = aes(x=date_time,
 ```
 
 ![](PA1_template_files/figure-html/data time plot no na-1.png)<!-- -->
+
+ggplot automatically removes NAs. Here, I plot the distribution minus NAs, and it's exactly the same as the steps distribution with NAs.
+
+
+```r
+proj_data_day_sum <- proj_data %>% group_by(date) %>%
+      summarize(Sum.Steps = sum(steps))
+ggplot(data = proj_data_day_sum, aes(x = date, y = Sum.Steps))+ 
+  geom_bar(stat = "identity")+
+  labs(x="Date", y = "Sum of Daily Steps")+
+  ggtitle("Total Daily Steps")
+```
+
+![](PA1_template_files/figure-html/data-total-daily-steps-1.png)<!-- -->
 
 ## What is mean total number of steps taken per day?
 
@@ -177,9 +190,33 @@ ggplot(data = proj_data_median)+geom_col(mapping = aes(x=date, y=median))+
 
 ![](PA1_template_files/figure-html/data median-1.png)<!-- -->
 
-
-
 ## What is the average daily activity pattern?
+
+As part of the exploration to answer this question, I have plotted the steps activity daily. 
+
+
+```r
+ggplot(data = proj_data_mutated)+
+  geom_line(mapping = aes(x = interval, y = steps))+
+  facet_wrap(~ date, nrow = 6)
+```
+
+![](PA1_template_files/figure-html/data daily average-1.png)<!-- -->
+
+Here is the mean number of steps by 5 second interval for all days.
+
+
+```r
+proj_data_interval <- proj_data_mutated_na_removed %>% group_by(interval) %>%
+  summarize(mean = mean(steps))
+ggplot(data = proj_data_interval)+geom_line(mapping = aes(x=interval, y=mean))+
+  labs(x="Time Interval", y = "Mean Daily Steps")+
+  ggtitle("Mean Daily Steps by Time Interval
+          \n in Seconds for Entire Day")
+```
+
+![](PA1_template_files/figure-html/data daily average by time interval-1.png)<!-- -->
+
 
 
 

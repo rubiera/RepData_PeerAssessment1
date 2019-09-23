@@ -48,11 +48,27 @@ nrow(proj_data_mutated_na_removed)
 
 ggplot automatically removes NAs. Here, I plot the distribution minus NAs, and it's exactly the same as the steps distribution with NAs.
 
-
 ```{r data time plot no na, warning=FALSE}
 ggplot(data = proj_data_mutated_na_removed)+geom_path(mapping = aes(x=date_time, y=steps))+
   labs(x="Time", y = "Steps")+
   ggtitle("Steps across time")
+```
+
+ggplot automatically removes NAs. Here, I plot the distribution minus NAs, and it's exactly the same as the steps distribution with NAs. 
+
+```{r data-total-daily-steps, warning=FALSE}
+proj_data_day_sum <- proj_data %>% group_by(date) %>%
+      summarize(Sum.Steps = sum(steps))
+ggplot(data = proj_data_day_sum, aes(x = date, y = Sum.Steps))+ 
+  geom_bar(stat = "identity")+
+  labs(x="Date", y = "Sum of Daily Steps")+
+  ggtitle("Total Daily Steps")
+```
+
+The mean, excluding NAs, of the total steps per day is 10766.19.
+
+```{r data-total-daily-steps, warning=FALSE}
+mean(na.omit(proj_data_day_sum$Sum.Steps))
 ```
 
 ## What is mean total number of steps taken per day?
@@ -78,9 +94,27 @@ ggplot(data = proj_data_median)+geom_col(mapping = aes(x=date, y=median))+
           \n (excluding intervals with steps = 0")
 ```
 
-
-
 ## What is the average daily activity pattern?
+
+As part of the exploration to answer this question, I have plotted the steps activity daily. 
+
+```{r data daily average, warning=FALSE}
+ggplot(data = proj_data_mutated)+
+  geom_line(mapping = aes(x = interval, y = steps))+
+  facet_wrap(~ date, nrow = 6)
+```
+
+Here is the mean number of steps by 5 second interval for all days.
+
+```{r data daily average by time interval, warning=FALSE}
+proj_data_interval <- proj_data_mutated_na_removed %>% group_by(interval) %>%
+  summarize(mean = mean(steps))
+ggplot(data = proj_data_interval)+geom_line(mapping = aes(x=interval, y=mean))+
+  labs(x="Time Interval", y = "Mean Daily Steps")+
+  ggtitle("Mean Daily Steps by Time Interval
+          \n in Seconds for Entire Day")
+```
+
 
 
 
