@@ -96,7 +96,7 @@ the dataset.
 
 Mean:
 
-![mean number of steps taken per day](data-median-1.png)
+![mean number of steps taken per day](data-mean-1.png)
 
 Median:
 
