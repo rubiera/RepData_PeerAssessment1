@@ -113,6 +113,13 @@ Median:
 2. Which 5-minute interval, on average across all the days in the dataset, contains the maximum number of steps?
 
 
+
+-----I will answer the last two questions together. Actually, I want to answer them in the opposite order: I want to know the variations by day of the week and by separating the weekdays from the weekends, and then I want to carry out my imputation.
+
+![interval time series for weekdays](data-weekday-daily-average-1.png)
+
+![interval time series for weekends](data-weekend-daily-average-1.png)
+
 ### Imputing missing values
 
 Note that there are a number of days/intervals where there are missing
@@ -126,7 +133,6 @@ bias into some calculations or summaries of the data.
 3. Create a new dataset that is equal to the original dataset but with the missing data filled in.
 
 4. Make a histogram of the total number of steps taken each day and Calculate and report the **mean** and **median** total number of steps taken per day. Do these values differ from the estimates from the first part of the assignment? What is the impact of imputing missing data on the estimates of the total daily number of steps?
-
 
 ### Are there differences in activity patterns between weekdays and weekends?
 
