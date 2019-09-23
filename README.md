@@ -1,4 +1,4 @@
-## Note to grader:
+## Note to grader
 
 I was unable to load the html using RStudio, and that's where the analysis is developed. I have attempted to reproduct the html from the R Markdown by editing this file.
 
