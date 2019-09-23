@@ -92,11 +92,11 @@ In order to impute NAs, I follow this procedure:
 
 Here is the imputation distribution for weekdays. Weekdays have lots of steps in the early morning that weekends do not have.
 
-![imputation time series for weekdays](step-3-imp-dist-weekdays.png)
+![imputation time series for weekdays](step-3-imp-dist-weekdays-1.png)
 
 Here is the imputation distribution for weekends.
 
-![imputation time series for weekends](step-3-imp-dist-weekends.png)
+![imputation time series for weekends](step-3-imp-dist-weekends-1.png)
 
 4. I use these distributions as the data I will impute. I assign the mean steps by interval from the "no NA values" weekday data to the weekday data with NA values for steps. I do the same for the weekend data by imputing weeking missing values with weekend modeled values from the mean steps in the "no NA values" weekend data.
 
