@@ -90,8 +90,17 @@ the dataset.
 
 1. Make a histogram of the total number of steps taken each day
 
+![total number of steps taken as a time series](data time plot no na-1.png)
+
 2. Calculate and report the **mean** and **median** total number of steps taken per day
 
+Mean:
+
+![mean number of steps taken per day](data median-1.png)
+
+Median:
+
+![mean number of steps taken per day for intervals with nonzero steps](data time plot no na-1.png)
 
 ### What is the average daily activity pattern?
 
